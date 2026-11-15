@@ -1,0 +1,454 @@
+# Panel pompy ciepła Heiko – tylko wbudowane karty HA, bez dodatków z HACS.
+# Ustawienia -> Panele -> Dodaj panel -> Nowy panel od zera -> ⋮ -> Edytuj -> ⋮ -> Edytor konfiguracji surowej -> wklej.
+title: Pompa ciepła
+views:
+- title: Pompa ciepła
+  path: pompa
+  icon: mdi:heat-pump
+  type: sections
+  max_columns: 4
+  badges:
+  - type: entity
+    entity: sensor.temperatura_zewnetrzna_finalna
+    name: Na zewnątrz
+    show_name: true
+  - type: entity
+    entity: sensor.tze284_dikb3dp6_ts0601_total_power
+    name: Pobór
+    show_name: true
+    icon: mdi:flash
+  - type: entity
+    entity: sensor.temperatura_gorna_noel_sonoff_snzb_02ld
+    name: CWU (góra)
+    show_name: true
+    icon: mdi:water-boiler
+  - type: entity
+    entity: select.heiko_tryb_pracy_pompy
+    name: Tryb
+    show_name: true
+  - type: entity
+    entity: sensor.heiko_harmonogram_status
+    name: Harmonogram
+    show_name: true
+  sections:
+  - type: grid
+    column_span: 3
+    cards:
+    - type: heading
+      heading: Instalacja
+      icon: mdi:hvac
+    - type: picture-elements
+      image: data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAwIDU2MCIgZm9udC1mYW1pbHk9IlNlZ29lIFVJLCBSb2JvdG8sIEhlbHZldGljYSwgQXJpYWwsIHNhbnMtc2VyaWYiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ0YW5rIiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmNWIzYSIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjAuNDUiIHN0b3AtY29sb3I9IiNmZjlmNDMiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjc1IiBzdG9wLWNvbG9yPSIjNWY4ZGZmIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzJmNmJmZiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0idGFua1NoaW5lIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMCI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2ZmZiIgc3RvcC1vcGFjaXR5PSIwLjE4Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMC4zNSIgc3RvcC1jb2xvcj0iI2ZmZiIgc3RvcC1vcGFjaXR5PSIwLjA0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzAwMCIgc3RvcC1vcGFjaXR5PSIwLjI1Ii8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ1bml0IiB4MT0iMCIgeTE9IjAiIHgyPSIwIiB5Mj0iMSI+CiAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzNhNDE1MCIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyNjJiMzUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9Im1hdHMiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIwIj4KICAgICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmY5ZjQzIiBzdG9wLW9wYWNpdHk9IjAuMjUiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZmY5ZjQzIiBzdG9wLW9wYWNpdHk9IjAuMDUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8ZmlsdGVyIGlkPSJnbG93IiB4PSItNTAlIiB5PSItNTAlIiB3aWR0aD0iMjAwJSIgaGVpZ2h0PSIyMDAlIj4KICAgICAgPGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iMyIgcmVzdWx0PSJiIi8+CiAgICAgIDxmZU1lcmdlPjxmZU1lcmdlTm9kZSBpbj0iYiIvPjxmZU1lcmdlTm9kZSBpbj0iU291cmNlR3JhcGhpYyIvPjwvZmVNZXJnZT4KICAgIDwvZmlsdGVyPgogIDwvZGVmcz4KCiAgPHJlY3Qgd2lkdGg9IjEwMDAiIGhlaWdodD0iNTYwIiByeD0iMjIiIGZpbGw9IiMxNzFhMjEiLz4KICA8cGF0aCBkPSJNMCA0NzAgSDEwMDAiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuMDQiLz4KCiAgPCEtLSBwaXBlcyBoZWF0IHB1bXAgPC0+IHRhbmsgLS0+CiAgPHBhdGggZD0iTTI2MiAyMDUgSDQwMCBRNDIwIDIwNSA0MjAgMTg1IFYxNjUgUTQyMCAxNDUgNDQwIDE0NSBINTIyIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZjZiNGEiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsdGVyPSJ1cmwoI2dsb3cpIi8+CiAgPHBhdGggZD0iTTI2MiAzMzAgSDQwMCBRNDIwIDMzMCA0MjAgMzUwIFY0MjAgUTQyMCA0NDAgNDQwIDQ0MCBINTIyIiBmaWxsPSJub25lIiBzdHJva2U9IiM0YWE4ZmYiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZmlsdGVyPSJ1cmwoI2dsb3cpIi8+CiAgPHBhdGggZD0iTTMxNCAyMDUgbC0xNCAtNyB2MTQgeiBNNDk0IDE0NSBsLTE0IC03IHYxNCB6IiBmaWxsPSIjZmZkMmM3Ii8+CiAgPHBhdGggZD0iTTQ4MCA0NDAgbDE0IC03IHYxNCB6IE0zMDAgMzMwIGwxNCAtNyB2MTQgeiIgZmlsbD0iI2NmZTdmZiIvPgoKICA8IS0tIG91dGRvb3IgdW5pdCAtLT4KICA8cmVjdCB4PSI0MCIgeT0iMTM1IiB3aWR0aD0iMjIyIiBoZWlnaHQ9IjI3MCIgcng9IjE4IiBmaWxsPSJ1cmwoI3VuaXQpIiBzdHJva2U9IiM0YjUzNjMiIHN0cm9rZS13aWR0aD0iMiIvPgogIDxjaXJjbGUgY3g9IjE1MSIgY3k9IjI1MCIgcj0iNzIiIGZpbGw9IiMxZDIxMjkiIHN0cm9rZT0iIzRiNTM2MyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGcgc3Ryb2tlPSIjNTk2MjdhIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiPgogICAgPGNpcmNsZSBjeD0iMTUxIiBjeT0iMjUwIiByPSI2MCIvPjxjaXJjbGUgY3g9IjE1MSIgY3k9IjI1MCIgcj0iNDQiLz4KICAgIDxwYXRoIGQ9Ik05MSAyNTAgSDIxMSBNMTUxIDE5MCBWMzEwIE0xMDguNiAyMDcuNiBMMTkzLjQgMjkyLjQgTTE5My40IDIwNy42IEwxMDguNiAyOTIuNCIvPgogIDwvZz4KICA8ZyBmaWxsPSIjOGE5NGFkIiBvcGFjaXR5PSIwLjkiPgogICAgPHBhdGggZD0iTTE1MSAyNTAgQzE0MSAyMjAgMTUwIDIwMCAxNjYgMTk4IEMxNzAgMjIwIDE2MiAyMzggMTUxIDI1MCBaIi8+CiAgICA8cGF0aCBkPSJNMTUxIDI1MCBDMTgxIDI0MCAyMDEgMjQ5IDIwMyAyNjUgQzE4MSAyNjkgMTYzIDI2MSAxNTEgMjUwIFoiLz4KICAgIDxwYXRoIGQ9Ik0xNTEgMjUwIEMxNjEgMjgwIDE1MiAzMDAgMTM2IDMwMiBDMTMyIDI4MCAxNDAgMjYyIDE1MSAyNTAgWiIvPgogICAgPHBhdGggZD0iTTE1MSAyNTAgQzEyMSAyNjAgMTAxIDI1MSA5OSAyMzUgQzEyMSAyMzEgMTM5IDIzOSAxNTEgMjUwIFoiLz4KICA8L2c+CiAgPGNpcmNsZSBjeD0iMTUxIiBjeT0iMjUwIiByPSI5IiBmaWxsPSIjYzlkMWUzIi8+CiAgPHJlY3QgeD0iNTgiIHk9IjM0MCIgd2lkdGg9IjE4NiIgaGVpZ2h0PSI1MCIgcng9IjEwIiBmaWxsPSIjMTQxNzFkIiBvcGFjaXR5PSIwLjYiLz4KICA8dGV4dCB4PSIxNTEiIHk9IjExOCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYjNjNSIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjYwMCIgbGV0dGVyLXNwYWNpbmc9IjEiPlBPTVBBIENJRVDFgUE8L3RleHQ+CgogIDwhLS0gdGFuayAtLT4KICA8cmVjdCB4PSI1MjIiIHk9IjYyIiB3aWR0aD0iMTYwIiBoZWlnaHQ9IjQ0MCIgcng9IjcyIiBmaWxsPSJ1cmwoI3RhbmspIiBvcGFjaXR5PSIwLjkyIi8+CiAgPHJlY3QgeD0iNTIyIiB5PSI2MiIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI0NDAiIHJ4PSI3MiIgZmlsbD0idXJsKCN0YW5rU2hpbmUpIi8+CiAgPHJlY3QgeD0iNTIyIiB5PSI2MiIgd2lkdGg9IjE2MCIgaGVpZ2h0PSI0NDAiIHJ4PSI3MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZThlY2Y1IiBzdHJva2Utb3BhY2l0eT0iMC4zNSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHRleHQgeD0iNjAyIiB5PSI0MiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2FhYjNjNSIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9IjYwMCIgbGV0dGVyLXNwYWNpbmc9IjEiPk5PRUwgNzAwIGw8L3RleHQ+CiAgPCEtLSBwcm9iZSBtYXJrcyAtLT4KICA8ZyBmaWxsPSIjZmZmZmZmIj48Y2lyY2xlIGN4PSI1MjIiIGN5PSIxNDAiIHI9IjUiLz48Y2lyY2xlIGN4PSI1MjIiIGN5PSIyODUiIHI9IjUiLz48Y2lyY2xlIGN4PSI1MjIiIGN5PSI0MzAiIHI9IjUiLz48L2c+CiAgPCEtLSBESFcgY29pbCAodXBwZXIpIC0tPgogIDxwYXRoIGQ9Ik02ODIgMTA4IEg2NTAgUTU2MCAxMTggNjUwIDEzMiBRNTYwIDE0NiA2NTAgMTYwIFE1NjAgMTc0IDY1MCAxODggUTU2MCAyMDIgNjUwIDIxNiBRNTYwIDIzMCA2NTAgMjQ0IEg2ODIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZmZmZiIgc3Ryb2tlLW9wYWNpdHk9IjAuNzUiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDwhLS0gbWF0cyBjb2lsIChsb3dlciwgY29wcGVyKSAtLT4KICA8cGF0aCBkPSJNNjgyIDMzMCBINjUwIFE1NjAgMzQwIDY1MCAzNTQgUTU2MCAzNjggNjUwIDM4MiBRNTYwIDM5NiA2NTAgNDEwIFE1NjAgNDI0IDY1MCA0MzggUTU2MCA0NTIgNjUwIDQ2NiBINjgyIiBmaWxsPSJub25lIiBzdHJva2U9IiNlNmExNWMiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgoKICA8IS0tIERIVyBvdXQgLyBjb2xkIGluIC0tPgogIDxwYXRoIGQ9Ik02ODIgMTA4IEg4NDAiIHN0cm9rZT0iI2ZmNmI0YSIgc3Ryb2tlLXdpZHRoPSI3IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNjgyIDI0NCBIODQwIiBzdHJva2U9IiM0YWE4ZmYiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODYwIDg2KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZThlY2Y1IiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMCAyMiBIMjIgVjEwIEg0NiBWMjIiLz48cGF0aCBkPSJNMzQgMTAgVjIgTTI2IDIgSDQyIi8+PHBhdGggZD0iTTQ2IDIyIFYzNCIvPgogICAgPHBhdGggZD0iTTQyIDQ0IHE0IDYgMCAxMCBNNTAgNDQgcTQgNiAwIDEwIiBzdHJva2U9IiM0YWE4ZmYiLz4KICA8L2c+CiAgPHRleHQgeD0iOTQwIiB5PSIxMTQiIGZpbGw9IiNlOGVjZjUiIGZvbnQtc2l6ZT0iMTciIGZvbnQtd2VpZ2h0PSI2MDAiPkNXVTwvdGV4dD4KICA8dGV4dCB4PSI4NTIiIHk9IjI3MCIgZmlsbD0iIzhhOTRhZCIgZm9udC1zaXplPSIxMyI+emltbmEgd29kYTwvdGV4dD4KCiAgPCEtLSBjYXBpbGxhcnkgbWF0cyAtLT4KICA8cGF0aCBkPSJNNjgyIDMzMCBINzkwIiBzdHJva2U9IiNmZjlmNDMiIHN0cm9rZS13aWR0aD0iNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPHBhdGggZD0iTTY4MiA0NjYgSDc5MCIgc3Ryb2tlPSIjNGFhOGZmIiBzdHJva2Utd2lkdGg9IjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxyZWN0IHg9Ijc5MCIgeT0iMzE4IiB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE2MCIgcng9IjE0IiBmaWxsPSJ1cmwoI21hdHMpIiBzdHJva2U9IiNmZjlmNDMiIHN0cm9rZS1vcGFjaXR5PSIwLjQ1IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8ZyBmaWxsPSJub25lIiBzdHJva2U9IiNmZjlmNDMiIHN0cm9rZS1vcGFjaXR5PSIwLjc1IiBzdHJva2Utd2lkdGg9IjIiPgogICAgPHBhdGggZD0iTTgwOCAzNDQgQzgyOCAzMzQgODQ4IDM1NCA4NjggMzQ0IFM5MDggMzM0IDkyOCAzNDQgUzk0OCAzNTQgOTUyIDM1MCIvPgogICAgPHBhdGggZD0iTTgwOCAzNzAgQzgyOCAzNjAgODQ4IDM4MCA4NjggMzcwIFM5MDggMzYwIDkyOCAzNzAgUzk0OCAzODAgOTUyIDM3NiIvPgogICAgPHBhdGggZD0iTTgwOCAzOTYgQzgyOCAzODYgODQ4IDQwNiA4NjggMzk2IFM5MDggMzg2IDkyOCAzOTYgUzk0OCA0MDYgOTUyIDQwMiIvPgogICAgPHBhdGggZD0iTTgwOCA0MjIgQzgyOCA0MTIgODQ4IDQzMiA4NjggNDIyIFM5MDggNDEyIDkyOCA0MjIgUzk0OCA0MzIgOTUyIDQyOCIvPgogIDwvZz4KICA8dGV4dCB4PSI4ODAiIHk9IjQ2MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2U4ZWNmNSIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjYwMCI+TWF0eSBrYXBpbGFybmU8L3RleHQ+Cjwvc3ZnPgo=
+      elements:
+      - type: state-label
+        entity: sensor.temperatura_gorna_noel_sonoff_snzb_02ld
+        style:
+          left: 60.2%
+          top: 25.0%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#f2f4f8'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(8px,2vw,21px)
+      - type: state-label
+        entity: sensor.temperatura_srodek_noel_sonoff_snzb_02ld
+        style:
+          left: 60.2%
+          top: 50.9%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#f2f4f8'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(8px,2vw,21px)
+      - type: state-label
+        entity: sensor.temperatura_dol_noel_sonoff_snzb_02ld
+        style:
+          left: 60.2%
+          top: 76.8%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#f2f4f8'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(8px,2vw,21px)
+      - type: state-label
+        entity: sensor.temperatura_cwu
+        style:
+          left: 34.0%
+          top: 31.8%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#ff9a85'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6.5px,1.45vw,15px)
+        prefix: 'zasilanie '
+      - type: state-label
+        entity: sensor.heiko_tui_woda_wejscie
+        style:
+          left: 34.0%
+          top: 63.7%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#8cc8ff'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6.5px,1.45vw,15px)
+        prefix: 'powrót '
+      - type: state-label
+        entity: sensor.maszynownia_czujnik_temperatury_cyrkulacja_cwu
+        style:
+          left: 76.0%
+          top: 39.3%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#c4cbda'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6px,1.15vw,12px)
+      - type: state-label
+        entity: sensor.temperatura_zewnetrzna_finalna
+        style:
+          left: 15.1%
+          top: 28.2%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#c4cbda'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6px,1.15vw,12px)
+        prefix: 'na zewnątrz '
+      - type: state-label
+        entity: sensor.tze284_dikb3dp6_ts0601_total_power
+        style:
+          left: 10.5%
+          top: 65.2%
+          background: transparent
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#6ee79a'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6.5px,1.45vw,15px)
+      - type: state-label
+        entity: sensor.heiko_sprezarka_czestotliwosc
+        style:
+          left: 19.8%
+          top: 65.2%
+          background: transparent
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#c4cbda'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6.5px,1.45vw,15px)
+      - type: state-label
+        entity: select.heiko_tryb_pracy_pompy
+        style:
+          left: 15.1%
+          top: 77.3%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#f2f4f8'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6.5px,1.45vw,15px)
+      - type: state-label
+        entity: sensor.heiko_harmonogram_status
+        style:
+          left: 15.1%
+          top: 82.5%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#c4cbda'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6px,1.15vw,12px)
+      - type: state-label
+        entity: sensor.salonkuchnia_salon_temperatura
+        style:
+          left: 88.0%
+          top: 53.6%
+          background: rgba(12,14,19,0.80)
+          clip-path: inset(5px 1px round 999px)
+          line-height: '1.25'
+          color: '#c4cbda'
+          font-weight: '600'
+          white-space: nowrap
+          font-size: clamp(6px,1.15vw,12px)
+        prefix: 'salon '
+      - type: conditional
+        conditions:
+        - entity: binary_sensor.pompa_ciepla_status
+          state: 'on'
+        elements:
+        - type: icon
+          icon: mdi:fan
+          tap_action:
+            action: more-info
+          entity: binary_sensor.pompa_ciepla_status
+          style:
+            left: 15.1%
+            top: 44.6%
+            color: '#4ade80'
+            --mdc-icon-size: clamp(14px,3.6vw,38px)
+            filter: 'drop-shadow(0 0 6px #4ade80)'
+      - type: conditional
+        conditions:
+        - entity: sensor.heiko_odszranianie
+          state: '1'
+        elements:
+        - type: icon
+          icon: mdi:snowflake-melt
+          tap_action:
+            action: more-info
+          entity: sensor.heiko_odszranianie
+          style:
+            left: 24.0%
+            top: 28.2%
+            color: '#7dd3fc'
+            --mdc-icon-size: clamp(11px,2.4vw,24px)
+            filter: 'drop-shadow(0 0 6px #7dd3fc)'
+      - type: conditional
+        conditions:
+        - entity: sensor.heiko_tryb_pracy
+          state: '1'
+        elements:
+        - type: icon
+          icon: mdi:fire
+          tap_action:
+            action: more-info
+          entity: sensor.heiko_tryb_pracy
+          style:
+            left: 76.0%
+            top: 15.4%
+            color: '#ff7a45'
+            --mdc-icon-size: clamp(11px,2.4vw,24px)
+            filter: 'drop-shadow(0 0 6px #ff7a45)'
+      - type: conditional
+        conditions:
+        - entity: sensor.heiko_tryb_pracy
+          state: '2'
+        elements:
+        - type: icon
+          icon: mdi:heat-wave
+          tap_action:
+            action: more-info
+          entity: sensor.heiko_tryb_pracy
+          style:
+            left: 47.0%
+            top: 21.4%
+            color: '#ff9f43'
+            --mdc-icon-size: clamp(11px,2.4vw,24px)
+            filter: 'drop-shadow(0 0 6px #ff9f43)'
+      grid_options:
+        columns: full
+  - type: grid
+    cards:
+    - type: heading
+      heading: Sterowanie
+      icon: mdi:tune-variant
+    - type: tile
+      entity: select.heiko_tryb_pracy_pompy
+      name: Tryb pracy
+      icon: mdi:heat-pump-outline
+      features:
+      - type: select-options
+      grid_options:
+        columns: 12
+      features_position: bottom
+      vertical: false
+    - type: tile
+      entity: switch.heiko_pompa_wlaczona
+      name: Pompa
+      grid_options:
+        columns: 6
+    - type: tile
+      entity: input_boolean.heiko_harmonogram
+      name: Harmonogram
+      grid_options:
+        columns: 6
+    - type: tile
+      entity: input_datetime.heiko_ogrzewanie_od
+      name: Ogrzewanie od
+      icon: mdi:radiator
+      grid_options:
+        columns: 6
+    - type: tile
+      entity: input_datetime.heiko_auto_od
+      name: Auto od
+      icon: mdi:water-boiler
+      grid_options:
+        columns: 6
+    - type: tile
+      entity: sensor.heiko_harmonogram_status
+      name: Status harmonogramu
+      grid_options:
+        columns: 12
+  - type: grid
+    column_span: 2
+    cards:
+    - type: heading
+      heading: Bufor NOEL – 24 h
+      icon: mdi:thermometer-water
+    - type: history-graph
+      hours_to_show: 24
+      grid_options:
+        columns: full
+        rows: 5
+      entities:
+      - entity: sensor.temperatura_gorna_noel_sonoff_snzb_02ld
+        name: Góra
+      - entity: sensor.temperatura_srodek_noel_sonoff_snzb_02ld
+        name: Środek
+      - entity: sensor.temperatura_dol_noel_sonoff_snzb_02ld
+        name: Dół
+      - entity: sensor.temperatura_cwu
+        name: Zasilanie z PC
+      - entity: sensor.heiko_tw_zasobnik_cwu
+        name: TW (sterownik)
+    - type: history-graph
+      hours_to_show: 24
+      grid_options:
+        columns: full
+        rows: 2
+      entities:
+      - entity: select.heiko_tryb_pracy_pompy
+        name: Tryb
+      - entity: binary_sensor.pompa_ciepla_status
+        name: Sprężarka
+  - type: grid
+    column_span: 2
+    cards:
+    - type: heading
+      heading: Pompa – 24 h
+      icon: mdi:chart-line
+    - type: gauge
+      entity: sensor.tze284_dikb3dp6_ts0601_total_power
+      name: Pobór mocy
+      min: 0
+      max: 6000
+      needle: true
+      severity:
+        green: 0
+        yellow: 4000
+        red: 5500
+      grid_options:
+        columns: 6
+        rows: 3
+    - type: gauge
+      entity: sensor.heiko_sprezarka_czestotliwosc
+      name: Sprężarka
+      unit: Hz
+      min: 0
+      max: 100
+      needle: true
+      grid_options:
+        columns: 6
+        rows: 3
+    - type: history-graph
+      hours_to_show: 24
+      grid_options:
+        columns: full
+        rows: 4
+      entities:
+      - entity: sensor.tze284_dikb3dp6_ts0601_total_power
+        name: Pobór mocy
+    - type: tile
+      entity: sensor.pompa_ciepla_ilosc_startow_dzisiaj
+      name: Starty dziś
+      icon: mdi:restart
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.pompa_ciepla_dzisiaj
+      name: Praca dziś
+      icon: mdi:timer-outline
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_odszraniania_dzis
+      name: Odszraniania dziś
+      icon: mdi:snowflake-melt
+      grid_options:
+        columns: 4
+  - type: grid
+    column_span: 2
+    cards:
+    - type: heading
+      heading: Zużycie energii
+      icon: mdi:lightning-bolt
+    - type: statistics-graph
+      entities:
+      - entity: sensor.tze284_dikb3dp6_ts0601_energia
+        name: Pompa ciepła
+      stat_types:
+      - change
+      chart_type: bar
+      period: day
+      days_to_show: 14
+      grid_options:
+        columns: full
+        rows: 5
+  - type: grid
+    column_span: 2
+    cards:
+    - type: heading
+      heading: Obieg czynnika
+      icon: mdi:molecule
+    - type: tile
+      entity: sensor.heiko_td_temperatura_tloczenia
+      name: Td tłoczenie
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_ts_temperatura_ssania
+      name: Ts ssanie
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_tp_temperatura_parownika
+      name: Tp parownik
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_pd_cisnienie_tloczenia
+      name: Pd
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_ps_cisnienie_ssania
+      name: Ps
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_zawor_rozprezny_otwarcie
+      name: EEV
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_sprezarka_prad
+      name: Prąd sprężarki
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_wentylator_1
+      name: Wentylator
+      grid_options:
+        columns: 4
+    - type: tile
+      entity: sensor.heiko_tuo_woda_wyjscie
+      name: Tuo
+      grid_options:
+        columns: 4
