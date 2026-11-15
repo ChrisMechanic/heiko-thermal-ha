@@ -41,15 +41,12 @@ Pompa **sama wypycha** ramki przez RS-485. Moduł przekazuje je przezroczyście 
 
 **HACS:** HACS → menu ⋮ → *Własne repozytoria* → `https://github.com/ChrisMechanic/heiko-thermal-ha`, kategoria *Integracja* → zainstaluj.
 
-**Bez HACS (terminal w HA, np. dodatek Studio Code Server lub SSH)**, instalacja i aktualizacja jednym poleceniem:
+**Bez HACS: jedno polecenie w terminalu HA** (dodatek Studio Code Server albo SSH). Instaluje albo aktualizuje integrację, kopiuje pakiety (istniejących nie nadpisuje), dopisuje konfigurację (z kopią `configuration.yaml.bak-heiko`), sprawdza ją i restartuje HA:
 
 ```bash
-cd /config && curl -sL https://github.com/ChrisMechanic/heiko-thermal-ha/archive/refs/heads/main.tar.gz | tar xz \
-  && mkdir -p custom_components packages && rm -rf custom_components/heiko_thermal \
-  && cp -r heiko-thermal-ha-main/custom_components/heiko_thermal custom_components/ \
-  && cp -n heiko-thermal-ha-main/examples/packages/*.yaml packages/ ; rm -rf heiko-thermal-ha-main
+curl -sL https://raw.githubusercontent.com/ChrisMechanic/heiko-thermal-ha/main/tools/install_ha.sh | HOST=192.168.1.183 NOTIFY=mobile_app_twoj_telefon bash
 ```
-(`cp -n` nie nadpisze pakietów, które już masz u siebie i ewentualnie zmieniłeś.)
+`HOST` to IP modułu USR-W600, `NOTIFY` to usługa powiadomień dla alarmów (opcjonalna). Przy aktualizacji wystarczy samo `curl … | bash`.
 
 Potem dodaj do `configuration.yaml`:
 
