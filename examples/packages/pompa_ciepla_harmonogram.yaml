@@ -61,6 +61,10 @@ automation:
         from: unavailable
         for: "00:01:00"
     conditions:
+      # w standby harmonogram nic nie wysyła do pompy
+      - condition: state
+        entity_id: switch.heiko_pompa_wlaczona
+        state: "on"
       - condition: state
         entity_id: input_boolean.heiko_harmonogram
         state: "on"
@@ -108,6 +112,9 @@ automation:
         for: "00:01:00"
         id: harmonogram
     conditions: &warunki_powrotu
+      - condition: state
+        entity_id: switch.heiko_pompa_wlaczona
+        state: "on"
       - condition: state
         entity_id: input_boolean.heiko_harmonogram
         state: "on"

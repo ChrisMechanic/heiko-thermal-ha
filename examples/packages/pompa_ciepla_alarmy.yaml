@@ -179,3 +179,31 @@ automation:
       - delay: "03:00:00"
     mode: single
     max_exceeded: silent
+
+  # Pompa wyłączona (standby) – harmonogram jej nie włącza, więc daj znać
+  - id: heiko_alarm_standby
+    alias: Pompa ciepła – alarm standby
+    mode: single
+    triggers:
+      - trigger: state
+        entity_id: switch.heiko_pompa_wlaczona
+        to: "off"
+        for: "00:02:00"
+        id: "off"
+      - trigger: time
+        at: input_datetime.heiko_auto_od
+        id: harmonogram
+      - trigger: time
+        at: input_datetime.heiko_ogrzewanie_od
+        id: harmonogram
+    conditions:
+      - condition: state
+        entity_id: switch.heiko_pompa_wlaczona
+        state: "off"
+    actions:
+      - action: notify.mobile_app_TELEFON_1
+        data:
+          title: Pompa ciepła w standby
+          message: >-
+            {% if trigger.id == 'off' %}Pompa została wyłączona (standby). Nie grzeje CO ani CWU.
+            {%- else %}Pompa nadal w standby – harmonogram jej nie włączy. Nie grzeje CO ani CWU.{% endif %}
