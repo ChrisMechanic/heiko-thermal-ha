@@ -39,7 +39,17 @@ Pompa **sama wypycha** ramki przez RS-485. Moduł przekazuje je przezroczyście 
 
 **Ręcznie:** skopiuj katalog `custom_components/heiko_thermal` do `/config/custom_components/`.
 
-**HACS:** HACS → menu ⋮ → *Własne repozytoria* → adres tego repozytorium, kategoria *Integracja* → zainstaluj.
+**HACS:** HACS → menu ⋮ → *Własne repozytoria* → `https://github.com/ChrisMechanic/heiko-thermal-ha`, kategoria *Integracja* → zainstaluj.
+
+**Bez HACS (terminal w HA, np. dodatek Studio Code Server lub SSH)**, instalacja i aktualizacja jednym poleceniem:
+
+```bash
+cd /config && curl -sL https://github.com/ChrisMechanic/heiko-thermal-ha/archive/refs/heads/main.tar.gz | tar xz \
+  && mkdir -p custom_components packages && rm -rf custom_components/heiko_thermal \
+  && cp -r heiko-thermal-ha-main/custom_components/heiko_thermal custom_components/ \
+  && cp -n heiko-thermal-ha-main/examples/packages/*.yaml packages/ ; rm -rf heiko-thermal-ha-main
+```
+(`cp -n` nie nadpisze pakietów, które już masz u siebie i ewentualnie zmieniłeś.)
 
 Potem dodaj do `configuration.yaml`:
 

@@ -1,10 +1,12 @@
 {
   "domain": "heiko_thermal",
   "name": "Heiko Thermal (USR-W600, lokalnie)",
-  "codeowners": [],
-  "documentation": "https://github.com/OWNER/heiko-thermal-ha",
+  "codeowners": [
+    "@ChrisMechanic"
+  ],
+  "documentation": "https://github.com/ChrisMechanic/heiko-thermal-ha",
   "iot_class": "local_push",
   "requirements": [],
   "version": "0.2.0",
-  "issue_tracker": "https://github.com/OWNER/heiko-thermal-ha/issues"
+  "issue_tracker": "https://github.com/ChrisMechanic/heiko-thermal-ha/issues"
 }
