@@ -1,26 +1,31 @@
 #!/bin/bash
 # Instalacja / aktualizacja Heiko Thermal w Home Assistant. Uruchom w terminalu HA (Studio Code Server, SSH):
 #
-#   curl -sL https://raw.githubusercontent.com/ChrisMechanic/heiko-thermal-ha/main/tools/install_ha.sh | HOST=192.168.1.183 NOTIFY=mobile_app_telefon bash
+#   curl -sL https://raw.githubusercontent.com/stalowydom/heiko-ha-claude/main/tools/install_ha.sh | HOST=192.168.1.183 NOTIFY=mobile_app_telefon bash
 #
 # HOST    IP modułu USR-W600 (potrzebne przy pierwszej instalacji)
 # NOTIFY  usługa powiadomień na telefon dla pakietu alarmów (opcjonalnie, np. mobile_app_s25u)
 # WRITE   true/false: sterowanie trybem i włącznikiem (domyślnie true)
+# UPDATE  1 = nadpisz istniejące pakiety nowszą wersją (kopia: *.yaml.bak-heiko)
+# ENERGY / INDOOR / OUTDOOR  encje licznika energii (kWh) i temperatur wewn./zewn. -> dzienna statystyka kWh/K
 #
-# Co robi: kopiuje integrację do custom_components, pakiety do katalogu packages (nie nadpisuje istniejących),
+# Co robi: kopiuje integrację do custom_components, pakiety do katalogu packages (istniejących nie nadpisuje bez UPDATE=1),
 # panel do /config/heiko_panel.yaml, dopisuje konfigurację do configuration.yaml (kopia: configuration.yaml.bak-heiko),
 # sprawdza konfigurację i restartuje HA, jeśli sprawdzenie przejdzie.
 set -e
 CONFIG=${CONFIG:-/config}
 TMP=$(mktemp -d)
-echo "== Pobieram heiko-thermal-ha"
-curl -fsSL "${URL:-https://github.com/ChrisMechanic/heiko-thermal-ha/archive/refs/heads/main.tar.gz}" | tar xz -C "$TMP"
-export SRC="$TMP/heiko-thermal-ha-main" CONFIG HOST NOTIFY WRITE
+echo "== Pobieram heiko-ha-claude"
+curl -fsSL "${URL:-https://github.com/stalowydom/heiko-ha-claude/archive/refs/heads/main.tar.gz}" | tar xz -C "$TMP"
+SRC="$(find "$TMP" -mindepth 1 -maxdepth 1 -type d | head -1)"
+export SRC CONFIG HOST NOTIFY WRITE UPDATE ENERGY INDOOR OUTDOOR
 python3 - <<'PY'
 import os, re, shutil, glob
 cfg, src = os.environ["CONFIG"], os.environ["SRC"]
 host, notify = os.environ.get("HOST", ""), os.environ.get("NOTIFY", "")
 write = os.environ.get("WRITE", "true").lower() != "false"
+update_pkgs = os.environ.get("UPDATE", "") == "1"
+eff = {k: os.environ.get(k.upper(), "") for k in ("energy", "indoor", "outdoor")}
 path = os.path.join(cfg, "configuration.yaml")
 text = open(path, encoding="utf-8").read()
 orig = text
@@ -49,9 +54,11 @@ pkg_abs = os.path.join(cfg, pkg_dir)
 os.makedirs(pkg_abs, exist_ok=True)
 for f in glob.glob(os.path.join(src, "examples", "packages", "*.yaml")):
     target = os.path.join(pkg_abs, os.path.basename(f))
-    if os.path.exists(target):
-        print("== Pakiet istnieje, zostawiam:", target)
+    if os.path.exists(target) and not update_pkgs:
+        print("== Pakiet istnieje, zostawiam (UPDATE=1 nadpisze):", target)
         continue
+    if os.path.exists(target):
+        shutil.copy(target, target + ".bak-heiko")
     body = open(f, encoding="utf-8").read()
     if os.path.basename(f) == "pompa_ciepla_alarmy.yaml":
         if notify:
@@ -66,6 +73,14 @@ if not re.search(r"^heiko_thermal:", text, re.M):
         raise SystemExit("!! Podaj HOST=<IP modułu USR-W600>")
     text = text.rstrip("\n") + f"\n\nheiko_thermal:\n  host: {host}\n  allow_write: {'true' if write else 'false'}\n"
     print("== Dopisano heiko_thermal (host", host + ")")
+# optional daily kWh/K statistic
+if all(eff.values()):
+    blk = re.search(r"^heiko_thermal:[ \t]*\n((?:[ \t]+.*\n?)*)", text, re.M)
+    if blk and "efficiency:" not in blk.group(0):
+        add = "  efficiency:\n" + "".join(f"    {k}: {v}\n" for k, v in eff.items())
+        body = blk.group(0) if blk.group(0).endswith("\n") else blk.group(0) + "\n"
+        text = text[:blk.start()] + body + add + text[blk.end():]
+        print("== Dopisano efficiency (kWh/K)")
 if text != orig:
     shutil.copy(path, path + ".bak-heiko")
     open(path, "w", encoding="utf-8").write(text)

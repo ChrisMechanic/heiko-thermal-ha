@@ -13,7 +13,13 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.util import dt as dt_util
 
 from .const import WRITABLE
-from .protocol import build_write, extract_frames_ex
+from .protocol import build_command, build_write, extract_frames_ex
+
+# The MyHeatPump cloud answers every pump frame with a short acknowledgement:
+# cmd 03 after a live frame (type 1), cmd 04 after a settings frame (type 2).
+# Without them (cloud down, or cloud disconnected on purpose) the pump stops accepting
+# writes, so the listener can send the same acknowledgements itself.
+ACK_CMD = {1: 0x03, 2: 0x04}
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,8 +37,11 @@ LOG_CONTEXT = {"hz": 21, "tuo": 5, "tui": 6, "tw": 8, "tc": 9, "amb": 25, "dhw":
 class HeikoListener:
     """Keeps a TCP connection to the USR-W600. Sends only whitelisted setting writes, and only if allowed."""
 
-    def __init__(self, hass: HomeAssistant, host: str, port: int, allow_write: bool = False) -> None:
+    def __init__(
+        self, hass: HomeAssistant, host: str, port: int, allow_write: bool = False, emulate_cloud: bool = True
+    ) -> None:
         self.hass, self.host, self.port, self.allow_write = hass, host, port, allow_write
+        self.emulate_cloud = emulate_cloud
         self.live: list[float] = []
         self.settings: list[float] = []
         self.mac: bytes | None = None
@@ -113,6 +122,10 @@ class HeikoListener:
                     for ftype, values, mac in extract_frames_ex(buf):
                         self.mac = mac
                         self._handle(ftype, values)
+                        if self.emulate_cloud and ftype in ACK_CMD:
+                            writer.write(build_command(mac, ACK_CMD[ftype]))
+                    if self.emulate_cloud:
+                        await writer.drain()
             except asyncio.CancelledError:
                 raise
             except Exception as err:  # noqa: BLE001

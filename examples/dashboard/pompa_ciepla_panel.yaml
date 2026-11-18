@@ -380,8 +380,8 @@ views:
       - entity: sensor.tze284_dikb3dp6_ts0601_total_power
         name: Pobór mocy
     - type: tile
-      entity: sensor.pompa_ciepla_ilosc_startow_dzisiaj
-      name: Starty dziś
+      entity: sensor.pompa_ciepla_starty_dzis_co_cwu
+      name: Starty dziś (CO / CWU)
       icon: mdi:restart
       grid_options:
         columns: 4
@@ -438,6 +438,29 @@ views:
         icon: mdi:calendar-today
         color: green
         vertical: true
+      - type: tile
+        entity: sensor.pompa_ciepla_kwh_na_stopien
+        name: kWh/stopień (wczoraj)
+        icon: mdi:thermometer-lines
+        color: green
+        vertical: true
+    - type: heading
+      heading: Efektywność
+      heading_style: subtitle
+    - type: statistics-graph
+      title: kWh na stopień różnicy temperatur
+      entities:
+      - entity: heiko_thermal:kwh_na_stopien
+        name: kWh/K
+        color: '#4ade80'
+      stat_types:
+      - mean
+      chart_type: bar
+      period: day
+      days_to_show: 30
+      grid_options:
+        columns: full
+        rows: 5
   - type: grid
     column_span: 2
     cards:

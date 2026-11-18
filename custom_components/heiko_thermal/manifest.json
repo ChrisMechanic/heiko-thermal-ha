@@ -4,9 +4,12 @@
   "codeowners": [
     "@ChrisMechanic"
   ],
-  "documentation": "https://github.com/ChrisMechanic/heiko-thermal-ha",
+  "documentation": "https://github.com/stalowydom/heiko-ha-claude",
   "iot_class": "local_push",
   "requirements": [],
-  "version": "0.2.0",
-  "issue_tracker": "https://github.com/ChrisMechanic/heiko-thermal-ha/issues"
+  "version": "0.4.0",
+  "issue_tracker": "https://github.com/stalowydom/heiko-ha-claude/issues",
+  "after_dependencies": [
+    "recorder"
+  ]
 }

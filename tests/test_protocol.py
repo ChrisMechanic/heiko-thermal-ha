@@ -30,3 +30,13 @@ def test_acks():
 
 if __name__ == "__main__":
     test_writes(); test_acks(); print("OK", crc16_modbus(b"123456789") == 0x4B37)
+
+
+def test_cloud_acks_rebuild_byte_exact():
+    """Acknowledgements the cloud sends after live (03) and settings (04) frames."""
+    mac = bytes.fromhex("0a1b2c3d4e5f")
+    for cmd in (3, 4):
+        frame = build_command(mac, cmd)
+        assert frame[:2] == b"\x55\xaa" and frame[-1] == 0x3A and frame[12] == cmd
+        assert frame[10:12] == b"\x01\x00"
+        assert int.from_bytes(frame[13:15], "little") == crc16_modbus(frame[2:13])

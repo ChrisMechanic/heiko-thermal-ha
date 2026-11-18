@@ -39,14 +39,14 @@ Pompa **sama wypycha** ramki przez RS-485. Moduł przekazuje je przezroczyście 
 
 **Ręcznie:** skopiuj katalog `custom_components/heiko_thermal` do `/config/custom_components/`.
 
-**HACS:** HACS → menu ⋮ → *Własne repozytoria* → `https://github.com/ChrisMechanic/heiko-thermal-ha`, kategoria *Integracja* → zainstaluj.
+**HACS:** HACS → menu ⋮ → *Własne repozytoria* → `https://github.com/stalowydom/heiko-ha-claude`, kategoria *Integracja* → zainstaluj.
 
-**Bez HACS: jedno polecenie w terminalu HA** (dodatek Studio Code Server albo SSH). Instaluje albo aktualizuje integrację, kopiuje pakiety (istniejących nie nadpisuje), dopisuje konfigurację (z kopią `configuration.yaml.bak-heiko`), sprawdza ją i restartuje HA:
+**Bez HACS: jedno polecenie w terminalu HA** (dodatek Studio Code Server albo SSH). Instaluje albo aktualizuje integrację, kopiuje pakiety (istniejące nadpisuje tylko z `UPDATE=1`, z kopią `.bak-heiko`), dopisuje konfigurację (z kopią `configuration.yaml.bak-heiko`), sprawdza ją i restartuje HA:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/ChrisMechanic/heiko-thermal-ha/main/tools/install_ha.sh | HOST=192.168.1.183 NOTIFY=mobile_app_twoj_telefon bash
+curl -sL https://raw.githubusercontent.com/stalowydom/heiko-ha-claude/main/tools/install_ha.sh | HOST=192.168.1.183 NOTIFY=mobile_app_twoj_telefon bash
 ```
-`HOST` to IP modułu USR-W600, `NOTIFY` to usługa powiadomień dla alarmów (opcjonalna). Przy aktualizacji wystarczy samo `curl … | bash`.
+`HOST` to IP modułu USR-W600, `NOTIFY` to usługa powiadomień dla alarmów (opcjonalna). Przy aktualizacji wystarczy samo `curl … | bash`, a `UPDATE=1` podmienia też pakiety na nową wersję. `ENERGY`, `INDOOR` i `OUTDOOR` (encje licznika energii oraz temperatur wewnątrz i na zewnątrz) włączają dzienną statystykę kWh/K, opisaną w rozdziale 9.
 
 Potem dodaj do `configuration.yaml`:
 
@@ -55,7 +55,10 @@ heiko_thermal:
   host: 192.168.1.183   # IP modułu USR-W600 (stały adres!)
   # port: 8899          # domyślnie
   allow_write: true     # sterowanie trybem i włącznikiem; bez tego tylko odczyt
+  # emulate_cloud: true # domyślnie: integracja potwierdza ramki pompy tak jak chmura
 ```
+
+**Praca bez chmury.** Chmura MyHeatPump odpowiada na każdą ramkę pompy krótkim potwierdzeniem: `cmd 03` po ramce live i `cmd 04` po ramce ustawień. Gdy tych potwierdzeń brakuje, bo chmura padła albo została odłączona, pompa dalej wysyła dane, ale przestaje przyjmować zapisy. Dlatego integracja domyślnie wysyła te same potwierdzenia przez lokalne połączenie (`emulate_cloud: true`). Sterowanie z HA działa wtedy także bez chmury, a Socket B w module można wyłączyć.
 
 Uwaga, w wersji 0.1 konfiguracja była pod `sensor: - platform: heiko_thermal`. Teraz jest osobna sekcja `heiko_thermal:`.
 
@@ -180,6 +183,21 @@ Moduł nie podaje mocy elektrycznej. Do zużycia potrzebny jest osobny licznik n
   ```
 - Heiko 9 ma **jednofazową sprężarkę**, więc pobiera prąd głównie z jednej fazy. Pozostałe fazy zasilają tylko grzałki (9 kW) i powinny pokazywać ~0, chyba że pompa przejdzie w tryb awaryjny.
 - Do panelu *Energia* dodaj licznik jako urządzenie, wtedy widać udział pompy w zużyciu domu.
+
+### Efektywność: kWh na stopień (kWh/K)
+
+Samo dzienne zużycie mocno zależy od pogody. Integracja może co dobę liczyć **zużycie z danego dnia / (średnia temp. wewnątrz − średnia temp. na zewnątrz)**. Mniejsza wartość znaczy, że dom i pompa potrzebowały mniej prądu na każdy stopień różnicy. Dzięki temu można porównywać zimne i ciepłe dni, np. przed włączeniem harmonogramu i po nim. W zużyciu jest też CWU, więc przy bardzo małej różnicy temperatur wskaźnik lekko rośnie.
+
+```yaml
+heiko_thermal:
+  host: 192.168.1.183
+  efficiency:
+    energy: sensor.pompa_ciepla_energia      # licznik kWh (total_increasing)
+    indoor: sensor.salon_temperatura
+    outdoor: sensor.temperatura_zewnetrzna
+```
+
+Wynik trafia do statystyki `heiko_thermal:kwh_na_stopien`, z datą tego samego dnia. Bieżący dzień się nie pojawia, bo jeszcze trwa. Po starcie integracja uzupełnia ostatnie 120 dni z historii HA, a potem dopisuje każdy dzień o 00:20. Wykres w panelu to `statistics-graph` z `period: day` i `stat_types: [mean]`.
 
 ## 10. Pułapki i wnioski z eksploatacji
 

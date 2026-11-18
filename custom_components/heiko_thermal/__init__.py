@@ -23,6 +23,16 @@ CONFIG_SCHEMA = vol.Schema(
                 vol.Required(CONF_HOST): cv.string,
                 vol.Optional(CONF_PORT, default=8899): cv.port,
                 vol.Optional(CONF_ALLOW_WRITE, default=False): cv.boolean,
+                # answer pump frames like the MyHeatPump cloud (needed for writes without the cloud)
+                vol.Optional("emulate_cloud", default=True): cv.boolean,
+                # optional daily statistic kWh per kelvin (energy meter + indoor/outdoor temperature)
+                vol.Optional("efficiency"): vol.Schema(
+                    {
+                        vol.Required("energy"): cv.entity_id,
+                        vol.Required("indoor"): cv.entity_id,
+                        vol.Required("outdoor"): cv.entity_id,
+                    }
+                ),
             }
         )
     },
@@ -34,7 +44,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     conf = config.get(DOMAIN)
     if conf is None:
         return True
-    listener = HeikoListener(hass, conf[CONF_HOST], conf[CONF_PORT], conf[CONF_ALLOW_WRITE])
+    listener = HeikoListener(
+        hass, conf[CONF_HOST], conf[CONF_PORT], conf[CONF_ALLOW_WRITE], conf["emulate_cloud"]
+    )
     hass.data[DOMAIN] = listener
     platforms = [Platform.SENSOR]
     if conf[CONF_ALLOW_WRITE]:
@@ -42,4 +54,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     for platform in platforms:
         hass.async_create_task(async_load_platform(hass, platform, DOMAIN, {}, config))
     listener.start()
+    if "efficiency" in conf:
+        from .efficiency import async_setup_efficiency
+
+        async_setup_efficiency(hass, conf["efficiency"])
     return True
